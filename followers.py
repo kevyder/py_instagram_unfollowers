@@ -1,25 +1,31 @@
+import os
 import pickle
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
-from credentials import username, password, account_handler
+from dotenv import load_dotenv
 
-INSTA_URL = "https://instagram.com"
+load_dotenv()
+
+INSTAGRAM_URL = "https://instagram.com"
+IGUSERNAME = os.environ.get("IGUSERNAME")
+IGPASSWORD = os.environ.get("IGPASSWORD")
+IGACCOUNT = os.environ.get("IGACCOUNT")
 
 
 class InstagramUnfollowers:
-    def __init__(self, user, pwd, account):
+    def __init__(self, username, password, account):
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-        self.user = user
-        self.password = pwd
-        self.account_url = f'{INSTA_URL}/{account}'
+        self.username = username
+        self.password = password
+        self.account_url = f'{INSTAGRAM_URL}/{account}'
 
     def check(self):
         try:
-            cookies = pickle.load(open(f"{self.user}.pickle", "rb"))
-            self.driver.get(INSTA_URL)
+            cookies = pickle.load(open(f"{self.username}.pickle", "rb"))
+            self.driver.get(INSTAGRAM_URL)
             for cookie in cookies:
                 self.driver.add_cookie(cookie)
         except (OSError, IOError) as e:
@@ -32,14 +38,14 @@ class InstagramUnfollowers:
 
     def __login(self):
         try:
-            self.driver.get(INSTA_URL)
+            self.driver.get(INSTAGRAM_URL)
             sleep(10)
 
             username_type = self.driver.find_element(
                 By.CSS_SELECTOR,
                 "input[name='username'][type='text']"
             )
-            username_type.send_keys(self.user)
+            username_type.send_keys(self.username)
 
             password_type = self.driver.find_element(
                 By.CSS_SELECTOR,
@@ -53,7 +59,7 @@ class InstagramUnfollowers:
             )
             log_in.click()
             sleep(10)
-            if self.driver.current_url == INSTA_URL:
+            if self.driver.current_url == INSTAGRAM_URL:
                 raise Exception("Login unsuccessful")
             self.__save_cookies()
         except Exception as e:
@@ -61,9 +67,6 @@ class InstagramUnfollowers:
             self.driver.close()
 
     def __get_unfollowers(self):
-        # Go to given account
-        self.driver.get(self.account_url)
-        sleep(3)
         # Get following people
         print("Getting following people, this might take a while...")
         following_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "following")
@@ -71,7 +74,7 @@ class InstagramUnfollowers:
         following_list = self.__get_people()
         # Get followers
         print("Getting followers, this might take a while...")
-        followers_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "follower")
+        followers_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "followers")
         followers_element.click()
         followers_list = self.__get_people()
         # Get not following people in list
@@ -84,7 +87,8 @@ class InstagramUnfollowers:
         print(f"Total: {len(not_following_back)}")
 
     def __get_people(self):  # Get people in list, return as list
-        sleep(3)
+        self.driver.get(self.account_url)
+        sleep(10)
         # Access scroll-box
         scroll_box = self.driver.find_element(By.CLASS_NAME, "_aano")
         prev_height, height = 0, 1
@@ -102,7 +106,7 @@ class InstagramUnfollowers:
         return names
 
     def __save_cookies(self):
-        pickle.dump(self.driver.get_cookies(), open(f"{self.user}.pickle", "wb"))
+        pickle.dump(self.driver.get_cookies(), open(f"{self.username}.pickle", "wb"))
 
 
 # Entry-Point
@@ -114,5 +118,9 @@ print("--------------------------------\n")
 print("Initializing WebDriver Manager")
 print("--------------------------------")
 sleep(1)
-my_bot = InstagramUnfollowers(username, password, account_handler)
+my_bot = InstagramUnfollowers(
+    username=IGUSERNAME,
+    password=IGPASSWORD,
+    account=IGACCOUNT
+)
 my_bot.check()

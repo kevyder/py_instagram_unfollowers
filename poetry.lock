@@ -104,14 +104,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "pickle-mixin"
-version = "1.0.2"
-description = "Makes un-pickle-able objects pick-able."
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
@@ -278,7 +270,7 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "74ddee02315afe499d22dadf864784f63c2cbfce8530016fcf6ba12ad8edc2c2"
+content-hash = "4a214dd68688e76bcb925bf35d9f4f416868be682caab6be7e89709e102ea553"
 
 [metadata.files]
 async-generator = [
@@ -472,9 +464,6 @@ outcome = [
 packaging = [
     {file = "packaging-23.0-py3-none-any.whl", hash = "sha256:714ac14496c3e68c99c29b00845f7a2b85f3bb6f1078fd9f72fd20f0570002b2"},
     {file = "packaging-23.0.tar.gz", hash = "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"},
-]
-pickle-mixin = [
-    {file = "pickle-mixin-1.0.2.tar.gz", hash = "sha256:d4983cd09939f6e402c69ba4f4200f2e6ccdfd39c020f6d1091290d78f17625c"},
 ]
 pycparser = [
     {file = "pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
