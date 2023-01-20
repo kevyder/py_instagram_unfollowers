@@ -1,11 +1,12 @@
 import os
 import pickle
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
+
 from dotenv import load_dotenv
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 load_dotenv()
 
@@ -16,16 +17,16 @@ IGACCOUNT = os.environ.get("IGACCOUNT")
 
 
 class InstagramUnfollowers:
-    def __init__(self, username, password, account):
+    def __init__(self, username: str, password: str, account: str) -> None:
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
         self.username = username
         self.password = password
         self.account_url = f'{INSTAGRAM_URL}/{account}'
 
-    def check(self):
+    def check(self) -> None:
         try:
             cookies = pickle.load(open(f"{self.username}.pickle", "rb"))
-            self.driver.get(INSTAGRAM_URL)
+            self.__go_to_home()
             for cookie in cookies:
                 self.driver.add_cookie(cookie)
         except (OSError, IOError) as e:
@@ -36,11 +37,9 @@ class InstagramUnfollowers:
 
     # Private methods
 
-    def __login(self):
+    def __login(self) -> None:
         try:
-            self.driver.get(INSTAGRAM_URL)
-            sleep(10)
-
+            self.__go_to_home()
             username_type = self.driver.find_element(
                 By.CSS_SELECTOR,
                 "input[name='username'][type='text']"
@@ -66,13 +65,15 @@ class InstagramUnfollowers:
             print(e.message)
             self.driver.close()
 
-    def __get_unfollowers(self):
+    def __get_unfollowers(self) -> None:
         # Get following people
+        self.__go_to_profile()
         print("Getting following people, this might take a while...")
         following_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "following")
         following_element.click()
         following_list = self.__get_people()
         # Get followers
+        self.__go_to_profile()
         print("Getting followers, this might take a while...")
         followers_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "followers")
         followers_element.click()
@@ -86,10 +87,9 @@ class InstagramUnfollowers:
             print(name)
         print(f"Total: {len(not_following_back)}")
 
-    def __get_people(self):  # Get people in list, return as list
-        self.driver.get(self.account_url)
-        sleep(10)
+    def __get_people(self) -> list:
         # Access scroll-box
+        sleep(10)
         scroll_box = self.driver.find_element(By.CLASS_NAME, "_aano")
         prev_height, height = 0, 1
         # Execute while there are more people to load
@@ -105,7 +105,15 @@ class InstagramUnfollowers:
         names = [name.text.splitlines()[0] for name in links if name.text != '']
         return names
 
-    def __save_cookies(self):
+    def __go_to_home(self) -> None:
+        self.driver.get(INSTAGRAM_URL)
+        sleep(10)
+
+    def __go_to_profile(self) -> None:
+        self.driver.get(self.account_url)
+        sleep(10)
+
+    def __save_cookies(self) -> None:
         pickle.dump(self.driver.get_cookies(), open(f"{self.username}.pickle", "wb"))
 
 
