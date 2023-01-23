@@ -4,6 +4,7 @@ from time import sleep
 
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
@@ -17,8 +18,22 @@ IGACCOUNT = os.environ.get("IGACCOUNT")
 
 
 class InstagramUnfollowers:
+
+    def set_chrome_options(self) -> Options:
+        """Sets chrome options for Selenium.
+        Chrome options for headless browser is enabled.
+        """
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_prefs = {}
+        chrome_options.experimental_options["prefs"] = chrome_prefs
+        chrome_prefs["profile.default_content_settings"] = {"images": 2}
+        return chrome_options
+
     def __init__(self, username: str, password: str, account: str) -> None:
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        self.driver = webdriver.Chrome(options=self.set_chrome_options())
         self.username = username
         self.password = password
         self.account_url = f'{INSTAGRAM_URL}/{account}'
@@ -65,16 +80,14 @@ class InstagramUnfollowers:
             print(e.message)
             self.driver.close()
 
-    def __get_unfollowers(self) -> None:
+    def __get_unfollowers(self) -> list:
         # Get following people
         self.__go_to_profile()
-        print("Getting following people, this might take a while...")
         following_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "following")
         following_element.click()
         following_list = self.__get_people()
         # Get followers
         self.__go_to_profile()
-        print("Getting followers, this might take a while...")
         followers_element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "followers")
         followers_element.click()
         followers_list = self.__get_people()
@@ -82,10 +95,12 @@ class InstagramUnfollowers:
         not_following_back = [user for user in following_list if user not in followers_list]
         # print data in ordered list
         not_following_back.sort()
+
         print("These people are not following you:")
         for name in not_following_back:
             print(name)
-        print(f"Total: {len(not_following_back)}")
+
+        return not_following_back
 
     def __get_people(self) -> list:
         # Access scroll-box
@@ -123,8 +138,6 @@ print("Instagram Unfollow-Checker")
 print("--------------------------------\n")
 
 # Run bot
-print("Initializing WebDriver Manager")
-print("--------------------------------")
 sleep(1)
 my_bot = InstagramUnfollowers(
     username=IGUSERNAME,
