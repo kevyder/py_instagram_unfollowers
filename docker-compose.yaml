@@ -1,0 +1,9 @@
+version: "3.10"
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    command: >
+      sh -c "python followers.py"
