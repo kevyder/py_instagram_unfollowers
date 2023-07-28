@@ -1,21 +1,14 @@
-import os
 import pickle
 from time import sleep
 
-from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
-load_dotenv()
-
-INSTAGRAM_URL = "https://instagram.com"
-IGUSERNAME = os.environ.get("IGUSERNAME")
-IGPASSWORD = os.environ.get("IGPASSWORD")
-IGACCOUNT = os.environ.get("IGACCOUNT")
+from constants import INSTAGRAM_URL
 
 
-class InstagramUnfollowers:
+class NotUnfollowers:
 
     def set_chrome_options(self) -> Options:
         """Sets chrome options for Selenium.
@@ -129,17 +122,3 @@ class InstagramUnfollowers:
     def __save_cookies(self) -> None:
         pickle.dump(self.driver.get_cookies(), open(f"{self.username}.pickle", "wb"))
 
-
-# Entry-Point
-print("--------------------------------")
-print("Instagram Unfollow-Checker")
-print("--------------------------------\n")
-
-# Run bot
-sleep(1)
-my_bot = InstagramUnfollowers(
-    username=IGUSERNAME,
-    password=IGPASSWORD,
-    account=IGACCOUNT
-)
-my_bot.check()
