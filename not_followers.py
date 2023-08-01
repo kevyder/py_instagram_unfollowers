@@ -28,6 +28,7 @@ class NotUnfollowers:
         self.username = username
         self.password = password
         self.account_url = f'{INSTAGRAM_URL}/{account}'
+        self.not_following_back = list()
 
     def check(self) -> None:
         try:
@@ -84,12 +85,10 @@ class NotUnfollowers:
         followers_list = self.__get_people()
         # Get not following people in list
         not_following_back = [user for user in following_list if user not in followers_list]
-        # print data in ordered list
+        # data in ordered list
         not_following_back.sort()
 
-        print("These people are not following you:")
-        for name in not_following_back:
-            print(name)
+        self.not_following_back = not_following_back
 
         return not_following_back
 

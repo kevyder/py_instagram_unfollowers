@@ -8,7 +8,8 @@ authors = ["Kevin Rodríguez <kyrodriguez97@gmail.com>"]
 python = "^3.10"
 selenium = "^4.7.2"
 webdriver-manager = "^3.8.5"
-fastapi = "^0.89.1"
+redis = "^4.6.0"
+sendgrid = "^6.10.0"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.11.4"
