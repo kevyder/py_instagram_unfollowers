@@ -3,8 +3,8 @@ FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 
-# install google chrome
-# Chrome dependency Instalation
+# Google Chrome installation
+# Google Chrome dependencies Installation
 RUN apt-get update && apt-get install -y \
     fonts-liberation \
     libasound2 \
@@ -32,8 +32,8 @@ RUN apt-get install ./google-chrome-stable_current_amd64.deb
 
 # install chromedriver
 RUN apt-get install -yqq unzip
-RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
-RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/`curl -sS https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_STABLE`/linux64/chromedriver-linux64.zip
+RUN unzip /tmp/chromedriver.zip chromedriver-linux64/chromedriver -d /usr/local/bin/
 
 # set display port to avoid crash
 ENV DISPLAY=:99
