@@ -18,7 +18,7 @@ class EmailSender:
             message = Mail(
                 from_email=self.sender_email,
                 to_emails=self.receiver_email,
-                subject="This IG accounts unfollows you recently",
+                subject="These IG accounts unfollowed you recently",
                 html_content=content,
             )
             sg = SendGridAPIClient(SENDGRID_API_KEY)

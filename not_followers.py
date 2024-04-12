@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
-from constants import INSTAGRAM_URL
+from constants import INSTAGRAM_URL, COOKIE_PATH
 
 
 class NotUnfollowers:
@@ -36,7 +36,8 @@ class NotUnfollowers:
 
     def check(self) -> None:
         try:
-            cookies = pickle.load(open(f"{self.username}.pickle", "rb"))
+            cookie_path = f'{COOKIE_PATH}{self.username}.pickle'
+            cookies = pickle.load(open(cookie_path, "rb"))
             self.__go_to_home()
             for cookie in cookies:
                 self.driver.add_cookie(cookie)
@@ -127,5 +128,6 @@ class NotUnfollowers:
         sleep(10)
 
     def __save_cookies(self) -> None:
-        pickle.dump(self.driver.get_cookies(), open(f"{self.username}.pickle", "wb"))
+        cookie_path = f'{COOKIE_PATH}{self.username}.pickle'
+        pickle.dump(self.driver.get_cookies(), open(cookie_path, "wb"))
 

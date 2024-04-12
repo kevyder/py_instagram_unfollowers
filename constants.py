@@ -9,6 +9,8 @@ IGUSERNAME = os.environ.get("IGUSERNAME")
 IGPASSWORD = os.environ.get("IGPASSWORD")
 IGACCOUNT = os.environ.get("IGACCOUNT")
 
+# Cookie
+COOKIE_PATH = os.environ.get("COOKIE_PATH")
 # Redis
 REDIS_URL = os.environ.get("REDIS_URL")
 
