@@ -10,8 +10,9 @@ selenium = "^4.7.2"
 webdriver-manager = "^3.9.1"
 redis = "^4.6.0"
 sendgrid = "^6.10.0"
+pandas = "^2.2.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 isort = "^5.11.4"
 python-dotenv = "^0.21.0"
 
