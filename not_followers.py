@@ -18,6 +18,10 @@ class NotUnfollowers:
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("enable-automation")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--dns-prefetch-disable")
+        chrome_options.add_argument("--disable-gpu")
         chrome_prefs = {}
         chrome_options.experimental_options["prefs"] = chrome_prefs
         chrome_prefs["profile.default_content_settings"] = {"images": 2}
@@ -46,7 +50,7 @@ class NotUnfollowers:
 
     def __login(self) -> None:
         try:
-            self.__go_to_home()
+            self.__go_to_login()
             username_type = self.driver.find_element(
                 By.CSS_SELECTOR,
                 "input[name='username'][type='text']"
@@ -112,6 +116,10 @@ class NotUnfollowers:
 
     def __go_to_home(self) -> None:
         self.driver.get(INSTAGRAM_URL)
+        sleep(10)
+
+    def __go_to_login(self) -> None:
+        self.driver.get(f'{INSTAGRAM_URL}/accounts/login/')
         sleep(10)
 
     def __go_to_profile(self) -> None:
